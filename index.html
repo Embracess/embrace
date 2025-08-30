@@ -2,9 +2,11 @@
 <html lang="ru">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход / Регистрация</title>
+
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
@@ -323,340 +325,426 @@
 
 <body>
 
+
     <div id="splash-screen" class="splash-screen">
+
         <h1 class="v1_13">Embrace</h1>
+
         <div id="animated-image" class="image-to-animate"></div>
     </div>
 
+
     <div class="main-container" id="main-content-container">
+
         <div class="auth-container" id="auth-container">
+
             <h1 class="auth-title">Добро пожаловать</h1>
+
             <div class="form-section" id="login-form-section">
+
                 <h2 class="form-title">Вход</h2>
+
                 <form id="login-form">
-                    <input type="text" id="login-username" placeholder="Имя пользователя" required>
-                    <input type="password" id="login-password" placeholder="Пароль" required>
-                    <button type="submit" class="auth-button">Войти</button>
-                </form>
+                    <input type="text" id="login-username" placeholder="Имя пользователя" required>                     <input type="password" id="login-password" placeholder="Пароль" required>                     <button type="submit" class="auth-button">Войти</button>                                    </form>
+
                 <p id="login-message-div" class="auth-message"></p>
+
                 <p class="toggle-link">Нет аккаунта? <a href="#" id="show-register">Зарегистрироваться</a></p>
             </div>
+
             <div class="form-section hidden" id="register-form-section">
+
                 <h2 class="form-title">Регистрация</h2>
+
                 <form id="register-form">
-                    <input type="text" id="register-username" placeholder="Имя пользователя" required>
-                    <input type="password" id="register-password" placeholder="Пароль" required>
-                    <button type="submit" class="auth-button">Зарегистрироваться</button>
-                </form>
+                    <input type="text" id="register-username" placeholder="Имя пользователя" required>                     <input type="password" id="register-password" placeholder="Пароль" required>                     <button type="submit" class="auth-button">Зарегистрироваться</button>                                    </form>
+
                 <p id="register-message-div" class="auth-message"></p>
+
                 <p class="toggle-link">Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
             </div>
+
             <p id="db-status-message" class="auth-message"></p>
         </div>
 
+
         <div class="chat-container hidden" id="chat-container">
+
             <div class="sidebar">
+
                 <div class="sidebar-header">
+
                     <h2>Чаты</h2>
                 </div>
+
                 <div class="search-bar">
                     <input type="text" id="user-search" placeholder="Найти пользователя...">
                     <div id="search-results" class="search-results hidden"></div>
                 </div>
+
                 <div id="chat-list" class="chat-list">
-                    <!-- Chats -->
                 </div>
             </div>
+
             <div class="chat-window" id="chat-window">
+
                 <div class="chat-header">
+
                     <h3 id="current-chat-username">Выберите чат</h3>
                 </div>
+
                 <div class="messages" id="messages-container">
-                    <!-- Messages -->
                 </div>
+
                 <div class="message-input-area">
-                    <input type="text" id="message-input" placeholder="Введите сообщение...">
-                    <button id="send-button" class="send-button"><i class="fas fa-paper-plane"></i></button>
-                </div>
+                    <input type="text" id="message-input" placeholder="Введите сообщение...">                     <button id="send-button" class="send-button"><i class="fas fa-paper-plane"></i></button>                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase -->
+
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+
 
     <script>
         // Firebase
-        const __firebase_config = JSON.stringify({
+            
+        const __firebase_config = JSON.stringify({      
             apiKey: "AIzaSyCLd9xQVwA9uN-qYuQyazIruLeRUbIioAA",
-            authDomain: "embrace-20466.firebaseapp.com",
-            projectId: "embrace-20466",
-            storageBucket: "embrace-20466.firebasestorage.app",
-            messagingSenderId: "516616336650",
-            appId: "1:516616336650:web:87593424244bf51ba0f6f3",
-            measurementId: "G-SK4KE8Z50K"
-        });
-        const __app_id = "default-app-id";
+                  authDomain: "embrace-20466.firebaseapp.com",
+                  projectId: "embrace-20466",
+                  storageBucket: "embrace-20466.firebasestorage.app",
+                  messagingSenderId: "516616336650",
+                  appId: "1:516616336650:web:87593424244bf51ba0f6f3",
+                  measurementId: "G-SK4KE8Z50K"    
+        });    
+        const __app_id = "default-app-id";    
         const __initial_auth_token = "YOUR_INITIAL_AUTH_TOKEN";
     </script>
+
     <script>
-        let app;
-        let auth;
-        let db;
+        let app;    
+        let auth;    
+        let db;    
         const dbStatusMessage = document.getElementById('db-status-message');
 
-        try {
-            const firebaseConfig = JSON.parse(__firebase_config);
-            app = firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth();
-            db = firebase.firestore();
-            dbStatusMessage.textContent = 'Мессенджер успешно работает.';
-            dbStatusMessage.style.color = 'green';
-        } catch (error) {
-            console.error("Firebase initialization failed:", error);
-            dbStatusMessage.textContent = 'Ошибка подключения к Firebase. Пожалуйста, убедитесь, что все сервисы включены в вашей консоли Firebase.';
-            dbStatusMessage.style.color = '#ff3860';
+            
+        try {      
+            const firebaseConfig = JSON.parse(__firebase_config);      
+            app = firebase.initializeApp(firebaseConfig);      
+            auth = firebase.auth();      
+            db = firebase.firestore();      
+            dbStatusMessage.textContent = 'Мессенджер успешно работает.';      
+            dbStatusMessage.style.color = 'green';    
+        } catch (error) {      
+            console.error("Firebase initialization failed:", error);      
+            dbStatusMessage.textContent = 'Ошибка подключения к Firebase. Пожалуйста, убедитесь, что все сервисы включены в вашей консоли Firebase.';      
+            dbStatusMessage.style.color = '#ff3860';    
         }
 
-        // UI Elements
-        const splashScreen = document.getElementById('splash-screen');
-        const animatedImage = document.getElementById('animated-image');
-        const mainContentContainer = document.getElementById('main-content-container');
-        const authContainer = document.getElementById('auth-container');
-        const chatContainer = document.getElementById('chat-container');
-        const showRegisterLink = document.getElementById('show-register');
-        const showLoginLink = document.getElementById('show-login');
-        const loginFormSection = document.getElementById('login-form-section');
-        const registerFormSection = document.getElementById('register-form-section');
-        const registerForm = document.getElementById('register-form');
-        const loginForm = document.getElementById('login-form');
-        const loginMessageDiv = document.getElementById('login-message-div');
-        const registerMessageDiv = document.getElementById('register-message-div');
-        const userSearchInput = document.getElementById('user-search');
-        const searchResultsDiv = document.getElementById('search-results');
-        const chatListDiv = document.getElementById('chat-list');
-        const chatWindow = document.getElementById('chat-window');
-        const currentChatUsername = document.getElementById('current-chat-username');
-        const messagesContainer = document.getElementById('messages-container');
-        const messageInput = document.getElementById('message-input');
+             // UI Elements
+            
+        const splashScreen = document.getElementById('splash-screen');    
+        const animatedImage = document.getElementById('animated-image');    
+        const mainContentContainer = document.getElementById('main-content-container');    
+        const authContainer = document.getElementById('auth-container');    
+        const chatContainer = document.getElementById('chat-container');    
+        const showRegisterLink = document.getElementById('show-register');    
+        const showLoginLink = document.getElementById('show-login');    
+        const loginFormSection = document.getElementById('login-form-section');    
+        const registerFormSection = document.getElementById('register-form-section');    
+        const registerForm = document.getElementById('register-form');    
+        const loginForm = document.getElementById('login-form');    
+        const loginMessageDiv = document.getElementById('login-message-div');    
+        const registerMessageDiv = document.getElementById('register-message-div');    
+        const userSearchInput = document.getElementById('user-search');    
+        const searchResultsDiv = document.getElementById('search-results');    
+        const chatListDiv = document.getElementById('chat-list');    
+        const chatWindow = document.getElementById('chat-window');    
+        const currentChatUsername = document.getElementById('current-chat-username');    
+        const messagesContainer = document.getElementById('messages-container');    
+        const messageInput = document.getElementById('message-input');    
         const sendButton = document.getElementById('send-button');
 
-        let currentUser = null;
-        let currentChatId = null;
+            
+        let currentUser = null;    
+        let currentChatId = null;    
+        let otherUserUid = null;
 
-        // Animation and UI logic
-        const splashToAuthDelay = 2100;
-        setTimeout(() => {
-            animatedImage.classList.add('animated');
+             // Animation and UI logic
+            
+        const splashToAuthDelay = 2100;    
+        setTimeout(() => {      
+            animatedImage.classList.add('animated');    
         }, 100);
 
-        setTimeout(() => {
-            splashScreen.classList.add('fade-out');
+            
+        setTimeout(() => {      
+            splashScreen.classList.add('fade-out');    
         }, 1100);
 
-        setTimeout(() => {
-            splashScreen.style.display = 'none';
-            mainContentContainer.style.display = 'flex';
+            
+        setTimeout(() => {      
+            splashScreen.style.display = 'none';      
+            mainContentContainer.style.display = 'flex';    
         }, splashToAuthDelay);
 
-        // Form toggle logic
-        showRegisterLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginFormSection.classList.add('hidden');
-            registerFormSection.classList.remove('hidden');
+             // Form toggle logic
+            
+        showRegisterLink.addEventListener('click', (e) => {      
+            e.preventDefault();      
+            loginFormSection.classList.add('hidden');      
+            registerFormSection.classList.remove('hidden');    
         });
 
-        showLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            registerFormSection.classList.add('hidden');
-            loginFormSection.classList.remove('hidden');
+            
+        showLoginLink.addEventListener('click', (e) => {      
+            e.preventDefault();      
+            registerFormSection.classList.add('hidden');      
+            loginFormSection.classList.remove('hidden');    
         });
 
-        // Registration logic
-        registerForm.addEventListener('submit', async(e) => {
-            e.preventDefault();
-            const username = document.getElementById('register-username').value;
+             // Registration logic
+            
+        registerForm.addEventListener('submit', async(e) => {      
+            e.preventDefault();      
+            const username = document.getElementById('register-username').value;      
             const password = document.getElementById('register-password').value;
 
-            try {
-                // Check username
-                const usersRef = db.collection('users').where('username_lowercase', '==', username.toLowerCase());
-                const snapshot = await usersRef.get();
-                if (!snapshot.empty) {
-                    registerMessageDiv.style.color = '#ff3860';
-                    registerMessageDiv.textContent = 'Это имя пользователя уже занято. Пожалуйста, выберите другое.';
-                    return;
+                  
+            try {        
+                const usersRef = db.collection('users').where('username_lowercase', '==', username.toLowerCase());        
+                const snapshot = await usersRef.get();        
+                if (!snapshot.empty) {          
+                    registerMessageDiv.style.color = '#ff3860';          
+                    registerMessageDiv.textContent = 'Это имя пользователя уже занято. Пожалуйста, выберите другое.';          
+                    return;        
                 }
 
-                const userCredential = await auth.createUserWithEmailAndPassword(username + '@messenger.com', password);
-                await db.collection('users').doc(userCredential.user.uid).set({
+                        
+                const userCredential = await auth.createUserWithEmailAndPassword(username + '@messenger.com', password);        
+                await db.collection('users').doc(userCredential.user.uid).set({          
                     username: username,
-                    username_lowercase: username.toLowerCase(),
-                    uid: userCredential.user.uid
-                });
-                registerMessageDiv.style.color = 'green';
-                registerMessageDiv.textContent = 'Успешная регистрация! Теперь вы можете войти.';
-                loginFormSection.classList.remove('hidden');
-                registerFormSection.classList.add('hidden');
-            } catch (error) {
-                console.error("Error during registration:", error);
-                registerMessageDiv.style.color = '#ff3860';
-                registerMessageDiv.textContent = error.message || 'Ошибка регистрации.';
-            }
+                              username_lowercase: username.toLowerCase(),
+                              uid: userCredential.user.uid        
+                });        
+                registerMessageDiv.style.color = 'green';        
+                registerMessageDiv.textContent = 'Успешная регистрация! Теперь вы можете войти.';        
+                loginFormSection.classList.remove('hidden');        
+                registerFormSection.classList.add('hidden');      
+            } catch (error) {        
+                console.error("Error during registration:", error);        
+                registerMessageDiv.style.color = '#ff3860';        
+                registerMessageDiv.textContent = error.message || 'Ошибка регистрации.';      
+            }    
         });
 
-        // Login logic
-        loginForm.addEventListener('submit', async(e) => {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value;
+             // Login logic
+            
+        loginForm.addEventListener('submit', async(e) => {      
+            e.preventDefault();      
+            const username = document.getElementById('login-username').value;      
             const password = document.getElementById('login-password').value;
 
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(username + '@messenger.com', password);
+                  
+            try {        
+                const userCredential = await auth.signInWithEmailAndPassword(username + '@messenger.com', password);        
                 currentUser = userCredential.user;
 
-                // Profile Updater
-                const userDocRef = db.collection('users').doc(currentUser.uid);
-                const userDoc = await userDocRef.get();
-                if (userDoc.exists && !userDoc.data().username_lowercase) {
-                    await userDocRef.update({
-                        username_lowercase: userDoc.data().username.toLowerCase()
-                    });
+                        
+                const userDocRef = db.collection('users').doc(currentUser.uid);        
+                const userDoc = await userDocRef.get();        
+                if (userDoc.exists && !userDoc.data().username_lowercase) {          
+                    await userDocRef.update({            
+                        username_lowercase: userDoc.data().username.toLowerCase()          
+                    });        
                 }
 
-                loginMessageDiv.style.color = 'green';
+                        
+                loginMessageDiv.style.color = 'green';        
                 loginMessageDiv.textContent = 'Вход успешен. Загрузка чатов...';
 
-                initializeChatUI();
-            } catch (error) {
-                console.error("Error during login:", error);
-                loginMessageDiv.style.color = '#ff3860';
-                loginMessageDiv.textContent = error.message || 'Неверное имя пользователя или пароль.';
-            }
+                        
+                initializeChatUI();      
+            } catch (error) {        
+                console.error("Error during login:", error);        
+                loginMessageDiv.style.color = '#ff3860';        
+                loginMessageDiv.textContent = error.message || 'Неверное имя пользователя или пароль.';      
+            }    
         });
 
-        // UI
-        function initializeChatUI() {
-            setTimeout(() => {
-                authContainer.classList.add('hidden');
-                chatContainer.classList.remove('hidden');
+             // UI
+            
+        function initializeChatUI() {      
+            setTimeout(() => {        
+                authContainer.classList.add('hidden');        
+                chatContainer.classList.remove('hidden');      
             }, 1500);
 
-            db.collection('chats')
-                .where('participants', 'array-contains', currentUser.uid)
-                .onSnapshot(async snapshot => {
-                    chatListDiv.innerHTML = '';
-                    for (const doc of snapshot.docs) {
-                        const chat = doc.data();
-                        const otherUserId = chat.participants.find(uid => uid !== currentUser.uid);
+                  
+            db.collection('chats')        .where('participants', 'array-contains', currentUser.uid)        .onSnapshot(async snapshot => {          
+                chatListDiv.innerHTML = '';          
+                for (const doc of snapshot.docs) {            
+                    const chat = doc.data();            
+                    const otherUserId = chat.participants.find(uid => uid !== currentUser.uid);
 
-                        if (otherUserId) {
-                            const otherUserDoc = await db.collection('users').doc(otherUserId).get();
-                            const otherUser = otherUserDoc.data();
+                                
+                    if (otherUserId) {              
+                        const otherUserDoc = await db.collection('users').doc(otherUserId).get();              
+                        const otherUser = otherUserDoc.data();
 
-                            const lastMessageSnapshot = await db.collection('messages')
-                                .doc(doc.id)
-                                .collection('chat')
-                                .orderBy('timestamp', 'desc')
-                                .limit(1)
-                                .get();
+                                      
+                        const lastMessageSnapshot = await db.collection('messages')                .doc(doc.id)                .collection('chat')                .orderBy('timestamp', 'desc')                .limit(1)                .get();
 
-                            let lastMessageText = '';
-                            if (!lastMessageSnapshot.empty) {
-                                lastMessageText = lastMessageSnapshot.docs[0].data().content;
-                            }
-
-                            const chatItem = document.createElement('div');
-                            chatItem.classList.add('chat-item');
-
-                            const usernameSpan = document.createElement('span');
-                            usernameSpan.classList.add('chat-item-username');
-                            usernameSpan.textContent = otherUser.username;
-
-                            const lastMessageSpan = document.createElement('span');
-                            lastMessageSpan.classList.add('chat-item-last-message');
-                            lastMessageSpan.textContent = lastMessageText;
-
-                            chatItem.appendChild(usernameSpan);
-                            chatItem.appendChild(lastMessageSpan);
-
-                            chatItem.addEventListener('click', () => startChat(otherUser.uid, otherUser.username));
-                            chatListDiv.appendChild(chatItem);
+                                      
+                        let lastMessageText = '';              
+                        if (!lastMessageSnapshot.empty) {                
+                            lastMessageText = lastMessageSnapshot.docs[0].data().content;              
                         }
-                    }
-                });
+
+                                      
+                        const chatItem = document.createElement('div');              
+                        chatItem.classList.add('chat-item');
+
+                                      
+                        const usernameSpan = document.createElement('span');              
+                        usernameSpan.classList.add('chat-item-username');              
+                        usernameSpan.textContent = otherUser.username;
+
+                                      
+                        const lastMessageSpan = document.createElement('span');              
+                        lastMessageSpan.classList.add('chat-item-last-message');              
+                        lastMessageSpan.textContent = lastMessageText;
+
+                                      
+                        chatItem.appendChild(usernameSpan);              
+                        chatItem.appendChild(lastMessageSpan);
+
+                                      
+                        chatItem.addEventListener('click', () => startChat(otherUser.uid, otherUser.username));              
+                        chatListDiv.appendChild(chatItem);            
+                    }          
+                }        
+            });    
         }
 
-        // User search
-        userSearchInput.addEventListener('input', async() => {
-            const query = userSearchInput.value.trim().toLowerCase();
-            if (query.length < 2) {
-                searchResultsDiv.classList.add('hidden');
-                return;
+             // User search
+            
+        userSearchInput.addEventListener('input', async() => {      
+            const query = userSearchInput.value.trim().toLowerCase();      
+            if (query.length < 2) {        
+                searchResultsDiv.classList.add('hidden');        
+                return;      
             }
 
-            const usersRef = db.collection('users').orderBy('username_lowercase').startAt(query).endAt(query + '\uf8ff');
-            const snapshot = await usersRef.get();
-            searchResultsDiv.innerHTML = '';
+                  
+            const usersRef = db.collection('users').orderBy('username_lowercase').startAt(query).endAt(query + '\uf8ff');      
+            const snapshot = await usersRef.get();      
+            searchResultsDiv.innerHTML = '';      
             searchResultsDiv.classList.remove('hidden');
 
-            if (snapshot.empty) {
-                searchResultsDiv.innerHTML = '<div class="search-item">Пользователи не найдены</div>';
-                return;
+                  
+            if (snapshot.empty) {        
+                searchResultsDiv.innerHTML = '<div class="search-item">Пользователи не найдены</div>';        
+                return;      
             }
 
-            snapshot.docs.forEach(doc => {
-                const user = doc.data();
-                if (user.uid !== currentUser.uid) {
-                    const searchItem = document.createElement('div');
-                    searchItem.classList.add('search-item');
-                    searchItem.textContent = user.username + ' (' + user.uid.substring(0, 4) + '...)';
-                    searchItem.addEventListener('click', () => {
-                        startChat(user.uid, user.username);
-                        userSearchInput.value = '';
-                        searchResultsDiv.classList.add('hidden');
-                    });
-                    searchResultsDiv.appendChild(searchItem);
-                }
-            });
+                  
+            snapshot.docs.forEach(doc => {        
+                const user = doc.data();        
+                if (user.uid !== currentUser.uid) {          
+                    const searchItem = document.createElement('div');          
+                    searchItem.classList.add('search-item');          
+                    searchItem.textContent = user.username + ' (' + user.uid.substring(0, 4) + '...)';          
+                    searchItem.addEventListener('click', () => {            
+                        startChat(user.uid, user.username);            
+                        userSearchInput.value = '';            
+                        searchResultsDiv.classList.add('hidden');          
+                    });          
+                    searchResultsDiv.appendChild(searchItem);        
+                }      
+            });    
         });
 
-        // Chat
-        async function startChat(otherUserId, otherUsername) {
-            let chatId = getChatId(currentUser.uid, otherUserId);
+             // Chat
+            
+        async function startChat(otherUserId, otherUsername) {      
+            let chatId = getChatId(currentUser.uid, otherUserId);      
             let chatExists = (await db.collection('chats').doc(chatId).get()).exists;
 
-            if (!chatExists) {
-                await db.collection('chats').doc(chatId).set({
-                    participants: [currentUser.uid, otherUserId]
-                });
+                  
+            if (!chatExists) {        
+                await db.collection('chats').doc(chatId).set({          
+                    participants: [currentUser.uid, otherUserId]        
+                });      
             }
 
-            currentChatId = chatId;
-            currentChatUsername.textContent = otherUsername;
+                  
+            currentChatId = chatId;      
+            otherUserUid = otherUserId;      
+            currentChatUsername.textContent = otherUsername;      
+            messageInput.focus();
 
-            db.collection('messages')
-                .doc(currentChatId)
-                .collection('chat')
-                .orderBy('timestamp')
-                .onSnapshot(snapshot => {
-                    messagesContainer.innerHTML = '';
-                    snapshot.docs.forEach(doc => {
-                        const message = doc.data();
-                        const messageDiv = document.createElement('div');
-                        messageDiv.classList.add('message');
-                        messageDiv.classList.add(message.senderId === currentUser.uid ? 'sent' : 'received');
-                        messageDiv.textContent = message.content;
-                        messagesContainer.appendChild(messageDiv);
-                    });
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                });
+                  
+            db.collection('messages')        .doc(currentChatId)        .collection('chat')        .orderBy('timestamp')        .onSnapshot(snapshot => {          
+                messagesContainer.innerHTML = '';          
+                snapshot.docs.forEach(doc => {            
+                    const message = doc.data();            
+                    const messageDiv = document.createElement('div');            
+                    messageDiv.classList.add('message');            
+                    messageDiv.classList.add(message.senderId === currentUser.uid ? 'sent' : 'received');            
+                    messageDiv.textContent = message.content;            
+                    messagesContainer.appendChild(messageDiv);          
+                });          
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;        
+            });    
         }
 
-        function getChatId(uid1, uid2) {
-            return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
+             // Message sending
+            
+        async function sendMessage() {      
+            const messageText = messageInput.value.trim();      
+            if (messageText === '' || !currentChatId) {        
+                return;      
+            }
+
+                  
+            try {        
+                await db.collection('messages').doc(currentChatId).collection('chat').add({          
+                    content: messageText,
+                              senderId: currentUser.uid,
+                              timestamp: firebase.firestore.FieldValue.serverTimestamp()        
+                });        
+                messageInput.value = '';
+
+                        
+                const chatDocRef = db.collection('chats').doc(currentChatId);        
+                await chatDocRef.update({          
+                    lastMessage: messageText,
+                              lastMessageTimestamp: firebase.firestore.FieldValue.serverTimestamp()        
+                });      
+            } catch (error) {        
+                console.error("Error sending message:", error);      
+            }    
+        }
+
+            
+        sendButton.addEventListener('click', sendMessage);
+
+            
+        messageInput.addEventListener('keypress', (e) => {      
+            if (e.key === 'Enter') {        
+                sendMessage();      
+            }    
+        });
+
+            
+        function getChatId(uid1, uid2) {      
+            return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;    
         }
     </script>
 </body>
